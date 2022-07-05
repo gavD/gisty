@@ -2,5 +2,22 @@
   "dependencies": {
     "axios": "^0.27.2",
     "commander": "^9.3.0"
-  }
+  },
+  "devDependencies": {
+    "eslint": "^8.19.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.4",
+    "eslint-plugin-promise": "^6.0.0"
+  },
+  "name": "Gisty",
+  "description": "Gisty is a tool to get public Gist information from the Github API",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["github"],
+  "author": "Gavin Davies <gavops@protonmail.com>",
+  "license": "ISC"
 }
