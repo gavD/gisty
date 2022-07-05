@@ -18,18 +18,44 @@ program.command('gisty')
     .option('--per-page <int>', 'how to display the output', 30)
     .action(async (username, options) => {
         // console.info(options);process.exit(1);
-        const tmp = await axios
-            .get(
-                'https://api.github.com/users/' + username + '/gists',
-                {
-                    headers: {
-                        'Accept': 'application/vnd.github+json',
-                        'Authorization': 'token ' + process.env.GITHUB_TOKEN,
-                    },
-                    params: { per_page: options.perPage }
-                });
+        const results = [];
+        try {
+            async function getNextPageOfResults(page) {
+                console.log("Get page " + page + "...");
+                const response = await axios
+                    .get(
+                        'https://api.github.com/users/' + username + '/gists',
+                        {
+                            headers: {
+                                'Accept': 'application/vnd.github+json',
+                                'Authorization': 'token ' + process.env.GITHUB_TOKEN,
+                            },
+                            params: {
+                                per_page: options.perPage,
+                                page: page
+                            }
+                        });
+                // add the data to our results
+                results.push(response.data);
 
-        console.log("Tmp done");
+                // are there any more pages?
+                if (response.data.length === parseInt(options.perPage, 10)) {
+                    console.log("  ... There are more page options, get another page...")
+                    await getNextPageOfResults(page + 1);
+                } else {
+                    console.log("  ... There are no more page options");
+                    console.log("  ... found " + results.length + " pages of results" );
+                    // console.log(results);
+                }
+            }
+
+            await getNextPageOfResults(1);
+        } catch(error) {
+            console.error(error);
+        }
+
+        // console.log("Tmp done");
+        // console.log(tmp);
         // axios
         //     .get(
         //         'https://api.github.com/users/' + username + '/gists',
